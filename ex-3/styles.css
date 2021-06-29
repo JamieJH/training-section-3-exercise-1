@@ -5,7 +5,7 @@ body, html, p {
 }
 
 .container {
-    margin: 30px;
+    margin: 50px 30px;
 }
 
 #chosen {
@@ -14,8 +14,10 @@ body, html, p {
 
 #answers li {
     text-decoration: underline;
+    width: fit-content;
     cursor: pointer;
     margin-bottom: 10px;
+    text-transform: capitalize;
 }
 
 #note, #final {
@@ -50,4 +52,68 @@ body, html, p {
 
 .btn__top{
     background-color: #e44141;
+}
+
+#edit-form {
+    width: fit-content;
+    min-width: 510px;
+}
+
+.form-input {
+    margin: 20px 0;
+}
+
+
+.form-input textarea, .form-input input, .form-input select {
+    padding: 3px 8px;
+    width: 300px;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    resize: none;
+}
+
+.form-input label {
+    width: 200px;
+    display: inline-block;
+}
+
+.form-input textarea {
+    height: 100px;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+#edit-form button {
+    background-color: rgb(59, 147, 187);
+    display: block;
+    margin: 0 auto;
+    border: none;
+    color: white;
+    width: 80px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#edit-form > div {
+    display: none;
+}
+
+#edit-form > div.active {
+    display: block;
+}
+
+.instructions-container {
+    max-width: 700px;
+    width: 90%;
+    min-width: 500px
+}
+
+.instructions, th, td {
+    border: 1px solid #000000;
+    border-collapse: collapse;
+    padding: 10px;
+}
+
+.instructions th{
+    text-align: center;
 }

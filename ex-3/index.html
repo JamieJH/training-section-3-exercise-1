@@ -12,7 +12,7 @@
 
 <body>
     <div class="container">
-        <h2>Lets's decide how you are gonna spend your Friday night!</h2>
+        <h1>Decision Maker!</h1>
 
         <div class="decision-box">
             <h4 id="chosen"></h4>
@@ -26,9 +26,129 @@
         </div>
 
         <p id="note"></p>
-
         <p id="final"></p>
+    </div>
 
+    <form id="edit-form" class="container">
+        <h2>Edit Decision Tree</h2>
+        <div class="form-input selection active">
+            <label for="action">Action: </label>
+            <select name="action" id="action">
+                <option value="add-decision">Add new Decision</option>
+                <option value="add-answers">Add new Answers to a Decision</option>
+                <option value="edit-question">Edit Decision question</option>
+                <option value="edit-answers">Edit Decision answers</option>
+                <option value="remove-decision">Remove Decision</option>
+                <option value="remove-answers">Remove Answer(s) to a Decision</option>
+            </select>
+        </div>
+
+        <!-- contain all available decision that user can choose from -->
+        <!-- the lable is changed depends on which action user chose -->
+        <div class="form-input decisions active">
+            <label id="all-decisions-label" for="decisions">Parent Decision: </label>
+            <select id="all-decisions">
+                <option value="">--seclect a decision question--</option>
+            </select>
+        </div>
+
+        <!-- if action is "Add new Decision" -->
+        <div class="form-add-decision active">
+            <div class="form-input">
+                <label for="add-question">Question: </label>
+                <input type="text" id="add-decision-question" placeholder="go out">
+            </div>
+
+            <div class="form-input">
+                <label for="add-answers">Answer(s) (new line separated): </label>
+                <textarea id="add-decision-answers"></textarea>
+            </div>
+        </div>
+
+        <!-- if action is "Add new answers to a decision" -->
+        <div class="form-add-answers">
+            <div class="form-input">
+                <label for="add-answers-answers">New Answer(s) (new line separated): </label>
+                <textarea id="add-answers-answers"></textarea>
+            </div>
+        </div>
+
+        <!-- if action is "Edit Decision question" -->
+        <div class="form-input form-edit-question">
+            <label for="edit-question-new">New question:</label>
+            <textarea id="edit-question-new" > </textarea>
+        </div>
+
+        <!-- if action is "Edit Decision answers" -->
+        <div class="form-edit-answers">
+            <div class="form-input edit-answers-available">
+                <label for="edit-answers-select">Answers (Hold Ctrl to multiple select):</label>
+                <select name="answers" id="edit-answers-select" multiple></select>
+            </div>
+            <div class="form-input edit-answers">
+                <label for="edit-answers-text-new">New answers:</label>
+                <textarea id="edit-answers-text-new" ></textarea>
+            </div>
+        </div>
+
+        <!-- if action is "Remove Decision" -->
+        <div class="form-input form-remove-decision">
+            <label for="remove-decision-ans">Answers:</label>
+            <textarea type="text" id="remove-decision-ans" disabled> </textarea>
+        </div>
+
+        <!-- if action is "Remove Answer(s) to a Decision" -->
+        <div class="form-input form-remove-answers">
+            <label for="remove-answers">Answers (Hold Ctrl to multiple select):</label>
+            <select name="answers" id="remove-answers-select" multiple></select>
+        </div>
+
+        <button>Submit</button>
+    </form>
+
+    <div class="instructions-container container">
+        <h2>Instructions</h2>
+        <table class="instructions">
+            <tr>
+                <th>Action</th>
+                <th>Instructions</th>
+            </tr>
+            <tr>
+                <td>Add new Decision</td>
+                <td>Choose a parent decision, enter the decision and its answers. <br>
+                    Each answer are separated by a new line.</td>
+            </tr>
+            <tr>
+                <td>Add new Answers to a Decision</td>
+                <td>Choose a decision and enter new answers. <br>
+                    Each answer are separated by a new line.</td>
+            </tr>
+            <tr>
+                <td>Edit Decision Question</td>
+                <td>Choose a decision and enter new question.</td>
+            </tr>
+            <tr>
+                <td>Edit Decision Question</td>
+                <td>Choose a decision, select the old answers you want to edit, then enter new answers. <br>
+                    Each answer are separated by a new line. <br>
+                    New answers will replace the old ones by the order of which they were specified. <br>
+                    If more new answers are given, they will be added to the decision. <br>
+                    If more old answers are given, they will be ignored.
+                </td>
+            </tr>
+            <tr>
+                <td>Remove a Decision</td>
+                <td>Choose a decision. <br>
+                    Removing a decision will also remove its subsequent answers and decisions
+                </td>
+            </tr>
+            <tr>
+                <td>Remove Answers to a Decision</td>
+                <td>Choose a decision and select multiple answers to be removed by holding Ctrl. <br>
+                    Removing an answer will also remove its subsequent decisions.
+                </td>
+            </tr>
+        </table>
     </div>
 
     <script type="module" src="./script.js"></script>

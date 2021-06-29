@@ -44,6 +44,11 @@ class DecisionTree {
         return this._topDecision
     }
 
+    addDecisionText(parent, question, answers) {
+        const parentDecision = this.getDecision(parent)
+        this.addDecisionObj(new Decision(question, parentDecision, answers))
+    }
+
     getPrevDecision(input) {
         // if input is a string (question)
         if (!(input instanceof Decision)) {
@@ -56,24 +61,25 @@ class DecisionTree {
     }
 
 
-    addOneDecision(decision) {
+    addDecisionObj(decision) {
         if (!decision.prevDecision) {
             console.log(`ERROR: Previous Decision was not specified`);
             return
         }
-        // check if the question match one of the previous Decision answers
-        if (decision.prevDecision.answers.indexOf(decision.question) !== -1) {
-            this._choices[decision.question] = decision
+
+        if (decision.prevDecision.answers.indexOf(decision.question) === -1) {
+            // if the question does not exist, add it to the parent answers first 
+            this.addDecisionAnswers(decision.prevDecision.question, [decision.question])
         }
-        else {
-            console.log(`ERROR: The decision question "${decision.question}" doesn't match any previous Decision's answers`);
-        }
+
+        this._choices[decision.question] = decision
+
     }
 
 
     addMultipleDecisions(decisions) {
         for (const decision of Object.values(decisions)) {
-            this.addOneDecision(decision)
+            this.addDecisionObj(decision)
         }
     }
 
@@ -136,6 +142,11 @@ class DecisionTree {
             }
         })
 
+        // if all answers was removed, remove that decision obj from the tree
+        if (input.answers.length === 0) {
+            delete this._choices[input.question]
+        }
+
     }
 
 
@@ -150,8 +161,9 @@ class DecisionTree {
                 delete this._choices[ans]
             })
 
-            // remove the anwers from decision
-            decision.answers.length = 0
+            decision.answers.length = 0             // remove the anwers from decision
+            delete this._choices[input.question]    // remove decision obj from the tree
+
         }
         else {
             console.log(`ERROR: Cannot find a Decision with question "${question}" in the tree.`);
@@ -279,12 +291,12 @@ const romance = new Decision("romance", watchMovie, ["i care a lot", "love, simo
 
 const tree = new DecisionTree(topDecision)
 tree.addMultipleDecisions({ stayIn, watchMovie, gaming, goOut })
-tree.addOneDecision(carnival)
-tree.addOneDecision(horror)
+tree.addDecisionObj(carnival)
+tree.addDecisionObj(horror)
 tree.addMultipleDecisions({action, romance})
 
 
-console.log(tree.choices);
+// console.log(tree.choices);
 // tree.editDecisionQuestion("stay in", "stay home")
 // console.log(tree);
 
@@ -309,7 +321,7 @@ function editDecisionAnswersTests() {
     console.log("---------------------------");
 
     const cookDinner = new Decision("cook feast", stayIn, ["lasagna", "mac 'n cheese"])
-    tree.addOneDecision(cookDinner)     // error "cook feast" is not one of stayIn answers
+    tree.addDecisionObj(cookDinner)     // error "cook feast" is not one of stayIn answers
     console.log("---------------------------");
 
     // old answer does not exist => skip that old-new answer pair
@@ -319,7 +331,7 @@ function editDecisionAnswersTests() {
     // old answers < new answers, extra new answer already in the current asnwers => skip it
     tree.editDecisionAnswers("go out", ["carnival", "karaoke"], ["bar", "concert", "concert"])
     const bar = new Decision("bar", goOut, ["beer", "cocktail", "soda"])
-    tree.addOneDecision(bar)
+    tree.addDecisionObj(bar)
     console.log("---------------------------");
 
     // old answers < new answers, perfect scenario
