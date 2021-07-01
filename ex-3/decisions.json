@@ -1,0 +1,121 @@
+{
+    "topDecision": {
+        "id": "friday night",
+        "question": "How do you want to spend your friday night?",
+        "answers": [
+            "go out",
+            "stay in"
+        ]
+    },
+
+    "decisions": [
+        {
+            "id": "go out",
+            "question": "Where do you want to go?",
+            "answers": [
+                "carnival",
+                "movie theatre",
+                "club"
+            ],
+            "previousId": "friday night"
+        },
+        {
+            "id": "stay in",
+            "question": "What do you want to do while you're at home?",
+            "answers": [
+                "watch movie",
+                "play video games"
+            ],
+            "previousId": "friday night"
+        },
+        {
+            "id": "watch movie",
+            "question": "What genre do you want to watch?",
+            "answers": [
+                "horror",
+                "action",
+                "romance"
+            ],
+            "previousId": "stay in"
+        },
+        {
+            "id": "horror",
+            "question": "Which of these HORROR movies you prefer?",
+            "answers": [
+                "the conjuring",
+                "parasite",
+                "nightmares on elm street"
+            ],
+            "previousId": "watch movie"
+        },
+        {
+            "id": "action",
+            "question": "Which of these ACTION movies you prefer?",
+            "answers": [
+                "justice league - snyder's cut",
+                "ghost in the shell",
+                "john wich"
+            ],
+            "previousId": "watch movie"
+        },
+        {
+            "id": "romance",
+            "question": "Which of these ROMANCE movies you prefer?",
+            "answers": [
+                "the half of it",
+                "live, simon",
+                "happiest season"
+            ],
+            "previousId": "watch movie"
+        },
+        {
+            "id": "play video games",
+            "question": "Do you feel like playing with others or solo?",
+            "answers": [
+                "play multiplayer",
+                "play solo"
+            ],
+            "previousId": "stay in"
+        },
+        {
+            "id": "play solo",
+            "question": "So you're playing solo, what do you want to play?",
+            "answers": [
+                "remnant - from the ashes - offline mode",
+                "red dead redemption 2",
+                "dragon age: inquision"
+            ],
+            "previousId": "play video games"
+        },
+        {
+            "id": "play multiplayer",
+            "question": "You have some multiplayer games available, which one do you feel like playing?",
+            "answers": [
+                "remnant - from the ashas - online mode",
+                "overwatch",
+                "rainbow six - siege"
+            ],
+            "previousId": "play video games"
+        },
+        {
+            "id": "go out",
+            "question": "The night is young, where would you go?",
+            "answers": [
+                "carnival",
+                "club",
+                "movie theatre"
+            ],
+            "previousId": "friday night"
+        },
+        {
+            "id": "movie theatre",
+            "question": "There's some new releases at the theatre, what are you in the mood for?",
+            "answers": [
+                "black widow",
+                "no time to die",
+                "mortal kombat"
+            ],
+            "previousId": "go out"
+        }
+    ]
+}

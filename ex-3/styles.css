@@ -8,9 +8,23 @@ body, html, p {
     margin: 50px 30px;
 }
 
-#chosen {
-    text-transform: capitalize;
+.form-all-decisions-choose label:before{
+    content: "";
 }
+
+.form-all-decisions-choose.add-decision label:before{
+    content: "Parent ";
+}
+
+.form-all-decisions-choose .answer label{
+    content: "";
+}
+
+.form-all-decisions-choose .answer.enabled label{
+    content: " (Hold Ctrl to multiple select)";
+}
+
+
 
 #answers li {
     text-decoration: underline;
@@ -63,7 +77,6 @@ body, html, p {
     margin: 20px 0;
 }
 
-
 .form-input textarea, .form-input input, .form-input select {
     padding: 3px 8px;
     width: 300px;
@@ -81,6 +94,12 @@ body, html, p {
 .form-input textarea {
     height: 100px;
     font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+.form-all-decisions-choose textarea,
+#edit-question-new {
+    height: 40px;
+    resize: vertical;
 }
 
 #edit-form button {
