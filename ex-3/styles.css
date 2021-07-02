@@ -24,8 +24,6 @@ body, html, p {
     content: " (Hold Ctrl to multiple select)";
 }
 
-
-
 #answers li {
     text-decoration: underline;
     width: fit-content;
@@ -125,6 +123,12 @@ body, html, p {
     max-width: 700px;
     width: 90%;
     min-width: 500px
+}
+
+.notes {
+    font-style: italic;
+    color: #d32323;
+    font-size: 13px;
 }
 
 .instructions, th, td {

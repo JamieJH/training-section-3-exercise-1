@@ -143,7 +143,13 @@ import getDecisionTree from './tree.js'
 
     // function to return an array of entered answers separated by new lines  
     function getEnteredAnswers(textElem) {
-        return textElem.value.toLowerCase().split("\n").filter(answer => answer.trim() !== "");
+        const answers = []
+        textElem.value.toLowerCase().split("\n").forEach(answer => {
+            if (answer.trim() !== "") {
+                answers.push(answer.trim())
+            }
+        });
+        return answers
     }
 
     // on selecting an action option, display appropriate input fields
@@ -231,13 +237,11 @@ import getDecisionTree from './tree.js'
                 editQuestion.value = ""
                 break
             case "edit-answers":
-                const toBeEditAns = getMultipleSelected(editAnswersSelect);
+                const toBeEditAns = getMultipleSelected(allDecisionsAnswers);
                 const newAnswers = getEnteredAnswers(editAnswersText);
                 (toBeEditAns.length !== 0 && newAnswers) ?
                     decisionTree.editDecisionAnswers(decision, toBeEditAns, newAnswers) :
                     errorAlert("Edit Decision Answers");
-
-                editAnswersSelect.innerHTML = "";
                 editAnswersText.value = "";
                 break
             case "remove-decision":

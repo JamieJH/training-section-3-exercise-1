@@ -81,7 +81,7 @@
             "id": "play solo",
             "question": "So you're playing solo, what do you want to play?",
             "answers": [
-                "remnant - from the ashes - offline mode",
+                "metal gear solid v",
                 "red dead redemption 2",
                 "dragon age: inquision"
             ],
@@ -91,7 +91,7 @@
             "id": "play multiplayer",
             "question": "You have some multiplayer games available, which one do you feel like playing?",
             "answers": [
-                "remnant - from the ashas - online mode",
+                "the division 2",
                 "overwatch",
                 "rainbow six - siege"
             ],

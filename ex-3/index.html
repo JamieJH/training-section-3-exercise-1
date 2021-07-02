@@ -66,7 +66,7 @@
         <!-- if action is "Add new Decision" -->
         <div class="form-add-decision active">
             <div class="form-input">
-                <label for="add-id">Decision title (must be unique): </label>
+                <label for="add-id">Decision title *: </label>
                 <input type="text" id="add-decision-id" placeholder="go out">
             </div>
 
@@ -76,7 +76,7 @@
             </div>
 
             <div class="form-input">
-                <label for="add-answers">Answer(s) (new line separated): </label>
+                <label for="add-answers">Answer(s) (new line separated) **: </label>
                 <textarea id="add-decision-answers"></textarea>
             </div>
         </div>
@@ -84,7 +84,7 @@
         <!-- if action is "Add new answers to a decision" -->
         <div class="form-add-answers">
             <div class="form-input">
-                <label for="add-answers-answers">New Answer(s) (new line separated): </label>
+                <label for="add-answers-answers">New Answer(s) (new line separated) **: </label>
                 <textarea id="add-answers-answers"></textarea>
             </div>
         </div>
@@ -98,7 +98,7 @@
         <!-- if action is "Edit Decision answers" -->
         <div class="form-edit-answers">
             <div class="form-input edit-answers">
-                <label for="edit-answers-text-new">New answers (must be unique):</label>
+                <label for="edit-answers-text-new">New Answer(s) (new line separated) **:</label>
                 <textarea id="edit-answers-text-new"></textarea>
             </div>
         </div>
@@ -107,6 +107,10 @@
     </form>
 
     <div class="instructions-container container">
+        <div class="notes">
+            <p>* New Decision title should be unique, else it will replace the current Decision with the same title.</p>
+            <p>** New answer should be unique, should you ever want to create a decision from that answer.</p>
+        </div>
         <h2>Instructions</h2>
         <table class="instructions">
             <tr>
@@ -128,7 +132,7 @@
                 <td>Choose a decision and enter new question.</td>
             </tr>
             <tr>
-                <td>Edit Decision Question</td>
+                <td>Edit Decision Answers</td>
                 <td>Choose a decision, select the old answers you want to edit, then enter new answers. <br>
                     Each answer are separated by a new line. <br>
                     New answers will replace the old ones by the order of which they were specified. <br>

@@ -99,25 +99,16 @@ class DecisionTree {
 
 
     // editing a decision question, also edit its parent answer of that question
-    // editDecisionQuestion(id, newQuestion) {
-    //     const decision = this.getDecision(id)
-    //     // if there exist the question
-    //     if (decision) {
-    //         delete this._choices[id]            // delete the old 
-    //         decision.question = newQuestion     // update the decision new question
-    //         this._choices[id] = decision        // assign the decision to the new question key
-
-    //         // update previous decision answers
-    //         // if (decision !== topDecision) {         // if it's topDecision, there's no previous
-    //         //     const prevDecAnswers = decision.prevDecision.answers
-    //         //     const index = prevDecAnswers.indexOf(id)
-    //         //     prevDecAnswers[index] = newQuestion
-    //         // }
-    //     }
-    //     else {
-    //         console.log(`ERROR: Cannot find a Decision with question "${id}" in the tree.`);
-    //     }
-    // }
+    editDecisionQuestion(id, newQuestion) {
+        const decision = this.getDecision(id)
+        // if there exist the question
+        if (decision) {
+            decision.question = newQuestion     // update the decision new question
+        }
+        else {
+            console.log(`ERROR: Cannot find a Decision with question "${id}" in the tree.`);
+        }
+    }
 
     editDecisionId(id, newId) {
         const decision = this.getDecision(id)
