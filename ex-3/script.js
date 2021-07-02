@@ -1,8 +1,11 @@
-import decisionTree from './tree.js'
+import getDecisionTree from './tree.js'
 
-(function () {
+(async function () {
+    let decisionTree
+    await getDecisionTree.then(res => { decisionTree = res })
     /* Making decisions */
-    const chosen = document.getElementById("chosen")
+    const chosenQuestion = document.getElementById("chosen")
+    let chosenId
     const answers = document.getElementById("answers")
     const note = document.getElementById("note")
     const final = document.getElementById("final")
@@ -10,14 +13,14 @@ import decisionTree from './tree.js'
     const btnTop = document.querySelector(".btn__top")
 
     setupChoices(decisionTree.initialDecision)
-
     // display a decision question and its answers for user to choose from
     function setupChoices(decision) {
-        chosen.innerText = "There's no decision!"
+        chosenQuestion.innerText = "There's no decision!"
+        chosenId = decision.id
         let innerLis = ""
 
         if (decision.question) {
-            chosen.innerText = decision.question
+            chosenQuestion.innerText = decision.question[0].toUpperCase() + decision.question.substr(1)
             decision.answers.forEach(ans => {
                 innerLis += `<li>${ans}</li>`
             })
@@ -41,8 +44,7 @@ import decisionTree from './tree.js'
 
     // when user press the "Go back" button, go back to the immediate previous decision
     function goBack() {
-        const currentChosen = chosen.innerText.toLowerCase()
-        const prevDecision = decisionTree.getPrevDecision(currentChosen)
+        const prevDecision = decisionTree.getPrevDecision(chosenId)
         if (prevDecision) {
             setupChoices(prevDecision)
             reset()
@@ -80,10 +82,13 @@ import decisionTree from './tree.js'
     const actionsSelect = form.querySelector(".form-input.selection select")
     let currentAction = "add-decision"
 
-    const allDecisions = form.querySelector("#all-decisions")
-    const allDecisionsLabel = form.querySelector("#all-decisions-label")
+    const allDecisionsBox = form.querySelector(".form-all-decisions-choose")
+    const allDecisionsDec = allDecisionsBox.querySelector("#all-decisions-decision")
+    const allDecisionsQuestion = allDecisionsBox.querySelector("#all-decisions-question")
+    const allDecisionsAnswers = allDecisionsBox.querySelector("#all-decisions-answers")
 
     const addDecisionBox = form.querySelector(".form-add-decision")
+    const addDecisionId = addDecisionBox.querySelector("#add-decision-id")
     const addDecisionQuestion = addDecisionBox.querySelector("#add-decision-question")
     const addDecisionAnswers = addDecisionBox.querySelector("#add-decision-answers")
 
@@ -91,35 +96,32 @@ import decisionTree from './tree.js'
     const addAnswersAnswers = addAnswersBox.querySelector("#add-answers-answers")
 
     const editQuestionBox = form.querySelector(".form-edit-question")
+    const editQuestion = editQuestionBox.querySelector("#edit-question-new")
 
     const editAnswersBox = form.querySelector(".form-edit-answers")
     const editAnswersSelect = editAnswersBox.querySelector("#edit-answers-select")
     const editAnswersText = editAnswersBox.querySelector("#edit-answers-text-new")
 
-    const removeDecisionBox = form.querySelector(".form-remove-decision")
-    const removeDecisionAns = removeDecisionBox.querySelector("#remove-decision-ans")
-
-    const removeAnswersBox = form.querySelector(".form-remove-answers")
-    const removeAnswersSelect = removeAnswersBox.querySelector("#remove-answers-select")
-
-    const containers = [addDecisionBox, addAnswersBox, editQuestionBox,
-        editAnswersBox, removeDecisionBox, removeAnswersBox]
-
+    const containers = [addDecisionBox, addAnswersBox, editQuestionBox, editAnswersBox]
 
     populateDecisions()
 
-
-    function toggleActive(activeElement) {
+    function toggleActive(activeElement = null) {
         containers.forEach(element => element.classList.remove("active"))
-        activeElement.classList.add("active")
+        if (activeElement !== null) {
+            activeElement.classList.add("active")
+        }
     }
 
 
     // populate all available decision
     function populateDecisions() {
-        allDecisions.innerHTML = `<option value="">--seclect a decision question--</option>`
+        allDecisionsDec.innerHTML = `<option value="">--seclect a decision question--</option>`
+        allDecisionsQuestion.value = ""
+        allDecisionsAnswers.innerHTML = ""
+
         Object.keys(decisionTree.choices).forEach(dec => {
-            allDecisions.innerHTML += `<option value="${dec}">${dec}</option>`
+            allDecisionsDec.innerHTML += `<option value="${dec}">${dec}</option>`
         })
     }
 
@@ -141,19 +143,30 @@ import decisionTree from './tree.js'
 
     // function to return an array of entered answers separated by new lines  
     function getEnteredAnswers(textElem) {
-        return textElem.value.toLowerCase().split("\n");
+        const answers = []
+        textElem.value.toLowerCase().split("\n").forEach(answer => {
+            if (answer.trim() !== "") {
+                answers.push(answer.trim())
+            }
+        });
+        return answers
     }
 
     // on selecting an action option, display appropriate input fields
     actionsSelect.addEventListener("change", () => {
         currentAction = actionsSelect.value;
-        allDecisionsLabel.innerText = "Decision"
-        allDecisions.value = ""         // set default option
+        allDecisionsBox.classList.remove("add-decision")
+        allDecisionsBox.classList.remove("enabled")
+
+        allDecisionsDec.value = ""         // set default option
+        allDecisionsAnswers.innerHTML = ""
+        allDecisionsQuestion.value = ""
+        allDecisionsAnswers.disabled = true
 
         switch (currentAction) {
             case "add-decision":
                 toggleActive(addDecisionBox)
-                allDecisionsLabel.innerText = "Parent Decision"
+                allDecisionsBox.classList.add("add-decision")
                 break
             case "add-answers":
                 toggleActive(addAnswersBox)
@@ -162,37 +175,33 @@ import decisionTree from './tree.js'
                 toggleActive(editQuestionBox)
                 break
             case "edit-answers":
+                allDecisionsAnswers.disabled = false
+                allDecisionsBox.classList.add("enabled")
                 toggleActive(editAnswersBox)
                 break
-            case "remove-decision":
-                toggleActive(removeDecisionBox)
+            case "remove-answers":
+                allDecisionsAnswers.disabled = false
+                allDecisionsBox.classList.add("enabled")
+                toggleActive()
                 break
             default:
-                toggleActive(removeAnswersBox)
+                toggleActive()
         }
     })
 
 
     // on selecting an available decision, display its answers
-    allDecisions.addEventListener("change", () => {
-        const question = allDecisions.value
+    allDecisionsDec.addEventListener("change", () => {
+        const id = allDecisionsDec.value
 
-        if (question !== "") {
-            if (currentAction === "remove-decision") {
-                removeDecisionAns.value = decisionTree.choices[question].answers.join("\n")
-            }
-            else if (currentAction === "remove-answers") {
-                removeAnswersSelect.innerHTML = ""
-                decisionTree.choices[question].answers.forEach(ans => {
-                    removeAnswersSelect.innerHTML += `<option value="${ans}">${ans}</option>`
-                })
-            }
-            else if (currentAction === "edit-answers") {
-                editAnswersSelect.innerHTML = ""
-                decisionTree.choices[question].answers.forEach(ans => {
-                    editAnswersSelect.innerHTML += `<option value="${ans}">${ans}</option>`
-                })
-            }
+        if (id !== "") {
+            const decision = decisionTree.getDecision(id)
+            allDecisionsQuestion.value = decision.question
+            allDecisionsAnswers.innerHTML = ""
+
+            decision.answers.forEach(ans => {
+                allDecisionsAnswers.innerHTML += `<option value="${ans}">${ans}</option>`
+            })
         }
     })
 
@@ -200,43 +209,51 @@ import decisionTree from './tree.js'
     // Edit form 
     form.addEventListener("submit", (e) => {
         e.preventDefault()
-        const decision = allDecisions.value
+        const decision = allDecisionsDec.value
         if (!decision) {
             errorAlert("Decision not selected")
             return
         }
 
-        let question, answers
+        let question, answers, id
         switch (currentAction) {
             case "add-decision":
-                question = addDecisionQuestion.value.toLowerCase()
+                id = addDecisionId.value.trim().toLowerCase();
+                question = addDecisionQuestion.value.trim().toLowerCase();
                 answers = getEnteredAnswers(addDecisionAnswers);
-                (question && answers) ? decisionTree.addDecisionText(decision, question, answers) : errorAlert("Add new Decision")
+                (id && question && answers) ? decisionTree.addDecisionText(id, question, decision, answers) : errorAlert("Add new Decision")
+                addDecisionQuestion.value = "";      // clear input
+                addDecisionAnswers.value = "";
+                addDecisionId.value = "";
                 break
             case "add-answers":
                 answers = getEnteredAnswers(addAnswersAnswers);
-                console.log(answers);
                 answers ? decisionTree.addDecisionAnswers(decision, answers) : errorAlert("Add answers")
+                addAnswersAnswers.value = ""
                 break
             case "edit-question":
                 const newQuestion = editQuestionBox.querySelector("#edit-question-new").value.trim().toLowerCase();
                 newQuestion ? decisionTree.editDecisionQuestion(decision, newQuestion) : errorAlert("Edit Decision question")
+                editQuestion.value = ""
                 break
             case "edit-answers":
-                const toBeEditAns = getMultipleSelected(editAnswersSelect)
-                const newAnswers = getEnteredAnswers(editAnswersText)
-                    (toBeEditAns.length !== 0 && newAnswers) ?
+                const toBeEditAns = getMultipleSelected(allDecisionsAnswers);
+                const newAnswers = getEnteredAnswers(editAnswersText);
+                (toBeEditAns.length !== 0 && newAnswers) ?
                     decisionTree.editDecisionAnswers(decision, toBeEditAns, newAnswers) :
-                    errorAlert("Edit Decision Answers")
+                    errorAlert("Edit Decision Answers");
+                editAnswersText.value = "";
                 break
             case "remove-decision":
                 decisionTree.removeDecision(decision)
                 break
             case "remove-answers":
-                answers = getMultipleSelected(removeAnswersSelect)
+                answers = getMultipleSelected(allDecisionsAnswers)
                 answers ? decisionTree.removeSomeDecisionAnswers(decision, answers) : errorAlert("Remove Decision Answer(s)")
+                allDecisionsAnswers.innerHTML = ""
                 break
         }
+        console.log(decisionTree);
         setupChoices(decisionTree.initialDecision)
         populateDecisions()
     })

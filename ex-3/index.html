@@ -45,22 +45,38 @@
 
         <!-- contain all available decision that user can choose from -->
         <!-- the lable is changed depends on which action user chose -->
-        <div class="form-input decisions active">
-            <label id="all-decisions-label" for="decisions">Parent Decision: </label>
-            <select id="all-decisions">
-                <option value="">--seclect a decision question--</option>
-            </select>
+        <div class="form-all-decisions-choose active add-decision">
+            <div class="form-input">
+                <label for="decisions">Decision: </label>
+                <select id="all-decisions-decision">
+                    <option value="">--seclect a decision title--</option>
+                </select>
+            </div>
+            <div class="form-input">
+                <label for="all-decisions-question">Question:</label>
+                <textarea id="all-decisions-question" disabled> </textarea>
+            </div>
+            <div class="form-input answers">
+                <label for="all-decisions-answers">Answers:</label>
+                <select id="all-decisions-answers" multiple disabled> </select>
+            </div>
         </div>
+
 
         <!-- if action is "Add new Decision" -->
         <div class="form-add-decision active">
             <div class="form-input">
-                <label for="add-question">Question: </label>
-                <input type="text" id="add-decision-question" placeholder="go out">
+                <label for="add-id">Decision title *: </label>
+                <input type="text" id="add-decision-id" placeholder="go out">
             </div>
 
             <div class="form-input">
-                <label for="add-answers">Answer(s) (new line separated): </label>
+                <label for="add-question">Full question: </label>
+                <input type="text" id="add-decision-question" placeholder="Where do you want to go out?">
+            </div>
+
+            <div class="form-input">
+                <label for="add-answers">Answer(s) (new line separated) **: </label>
                 <textarea id="add-decision-answers"></textarea>
             </div>
         </div>
@@ -68,7 +84,7 @@
         <!-- if action is "Add new answers to a decision" -->
         <div class="form-add-answers">
             <div class="form-input">
-                <label for="add-answers-answers">New Answer(s) (new line separated): </label>
+                <label for="add-answers-answers">New Answer(s) (new line separated) **: </label>
                 <textarea id="add-answers-answers"></textarea>
             </div>
         </div>
@@ -76,37 +92,25 @@
         <!-- if action is "Edit Decision question" -->
         <div class="form-input form-edit-question">
             <label for="edit-question-new">New question:</label>
-            <textarea id="edit-question-new" > </textarea>
+            <textarea id="edit-question-new"> </textarea>
         </div>
 
         <!-- if action is "Edit Decision answers" -->
         <div class="form-edit-answers">
-            <div class="form-input edit-answers-available">
-                <label for="edit-answers-select">Answers (Hold Ctrl to multiple select):</label>
-                <select name="answers" id="edit-answers-select" multiple></select>
-            </div>
             <div class="form-input edit-answers">
-                <label for="edit-answers-text-new">New answers:</label>
-                <textarea id="edit-answers-text-new" ></textarea>
+                <label for="edit-answers-text-new">New Answer(s) (new line separated) **:</label>
+                <textarea id="edit-answers-text-new"></textarea>
             </div>
-        </div>
-
-        <!-- if action is "Remove Decision" -->
-        <div class="form-input form-remove-decision">
-            <label for="remove-decision-ans">Answers:</label>
-            <textarea type="text" id="remove-decision-ans" disabled> </textarea>
-        </div>
-
-        <!-- if action is "Remove Answer(s) to a Decision" -->
-        <div class="form-input form-remove-answers">
-            <label for="remove-answers">Answers (Hold Ctrl to multiple select):</label>
-            <select name="answers" id="remove-answers-select" multiple></select>
         </div>
 
         <button>Submit</button>
     </form>
 
     <div class="instructions-container container">
+        <div class="notes">
+            <p>* New Decision title should be unique, else it will replace the current Decision with the same title.</p>
+            <p>** New answer should be unique, should you ever want to create a decision from that answer.</p>
+        </div>
         <h2>Instructions</h2>
         <table class="instructions">
             <tr>
@@ -128,7 +132,7 @@
                 <td>Choose a decision and enter new question.</td>
             </tr>
             <tr>
-                <td>Edit Decision Question</td>
+                <td>Edit Decision Answers</td>
                 <td>Choose a decision, select the old answers you want to edit, then enter new answers. <br>
                     Each answer are separated by a new line. <br>
                     New answers will replace the old ones by the order of which they were specified. <br>

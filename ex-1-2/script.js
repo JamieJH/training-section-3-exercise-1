@@ -80,7 +80,7 @@ const findMaxRepetitionsOne = (arr) => {
     return { mostRepeated: mostRepeated, repetitions: maxRepititions }
 }
 
-console.log(findMaxRepetitionsOne(arr_2));
+// console.log(findMaxRepetitionsOne(arr_2));
 
 
 // Using only one loop: array.reduce()
@@ -88,31 +88,35 @@ const findMaxRepetitionsTwo = (arr) => {
     if (arr.length === 0) {
         return null
     }
-    const {mostRepeated, counters} = arr.reduce((accumulated, item) => {
-        // count occurences for each item
-        accumulated.counters[item] = accumulated.counters[item] + 1 || 1
+    const { mostRepeated, counters } = arr.reduce((accumulated, item) => {
+
+        // count occurences for each item, not immediately update the counters obj as the 
+        // count of most repeated values will also be changed, making if condition misbehave
+        const count = accumulated.counters[item] + 1 || 1
 
         // current most repeated items
-        const maxVals = Object.keys(accumulated.mostRepeated)
+        const maxVals = accumulated.mostRepeated
 
         // if NO most repeated item exist (first loop) or their repetitions < those of current item
         // => there's a new most repeated item, clear the current mostRepeated
-        if (maxVals.length === 0 || accumulated.counters[maxVals[0]] < accumulated.counters[item]) {
-            accumulated.mostRepeated = {}             // clear obj
-            accumulated.mostRepeated[item] = true     // add the new max item to obj
+        if (maxVals.length === 0 || accumulated.counters[maxVals[0]] < accumulated.counters[item] + 1) {
+            accumulated.mostRepeated.length = 0          // remove all stored most repeated values
+            accumulated.mostRepeated.push(item);         // add the new max item to obj
         }
 
         // if some most repeated item exist and their repetitions === those of current item,
         // => add that item to mostRepeated obj
-        else if (maxVals.length && accumulated.counters[maxVals[0]] === accumulated.counters[item]) {
-            accumulated.mostRepeated[item] = true
+        else if (maxVals.length && accumulated.counters[maxVals[0]] === accumulated.counters[item] + 1) {
+            accumulated.mostRepeated.push(item)
         }
 
-        return accumulated 
-    }, { mostRepeated: {}, counters: {} })
+        // update repetitions for the current item
+        accumulated.counters[item] = count
 
-    const mostRepeatedItems = Object.keys(mostRepeated)
-    return { mostRepeated: mostRepeatedItems, repititions: counters[mostRepeatedItems[0]] }
+        return accumulated
+    }, { mostRepeated: [], counters: {} })
+
+    return { mostRepeated: mostRepeated, repititions: counters[mostRepeated[0]] }
 }
 
 console.log(findMaxRepetitionsTwo(arr_2));
