@@ -1,122 +1,163 @@
 // ---------------------------------------------------------------
 // Exercise 1: Remove duplicate from array
-const arr = [1, 2, 2, 3, 4, 5, 3, 2, 4, 5, 6, 7, 5, 6]
+const duplicatedItems = [1, 2, 2, 3, 4, 5, 3, 2, 4, 5, 6, 7, 5, 6];
 
-// 1. Using Set
-const removeDupOne = (arr) => {
-    return Array.from(new Set(arr))
+const removeDuplicateFactory = (duplicatedItems, option) => {
+    if(!Array.isArray(duplicatedItems)) {
+        throw (new Error("Expect an array but received another type."))
+    }
+
+    if(duplicatedItems.length === 0) {
+        throw (new Error("Expect an array with at least one item but received an empty array."))
+    }
+
+    if (!option) {
+        throw (new Error('Expect an option as a string of value "set", "map", "indexof-original", or "indexof-final"'))
+    }
+
+    switch(option.toLowerCase()) {
+        case 'set': {
+            return removeDuplicateUsingSet(duplicatedItems);
+        }
+        case 'map': {
+            return removeDuplicateUsingMap(duplicatedItems);
+        }
+        case 'indexof-original': {
+            return removeDuplicateUsingIndexOfOriginalArray(duplicatedItems);
+        }
+        case 'indexof-final': {
+            return removeDuplicateUsingIndexOfFinalArray(duplicatedItems);
+        }
+        default: {
+            throw (new Error('Expect an option as a string of value "set", "map", "indexof-original", or "indexof-final"'))
+        }
+    }
 }
 
+const removeDuplicateUsingSet = (duplicatedItems) => {
+    return Array.from(new Set(duplicatedItems));
+}
 
-// 2. An extra map to store visited element
-const removeDupTwo = (arr) => {
-    const visited = {}
-    const unique = []
-    arr.forEach(item => {
-        if (!visited[item]) {
-            unique.push(item)
-            visited[item] = true
+const removeDuplicateUsingMap = (duplicatedItems) => {
+    const visitedItems = {};
+    const uniqueItems = [];
+    duplicatedItems.forEach(item => {
+        if (!visitedItems[item]) {
+            uniqueItems.push(item);
+            visitedItems[item] = true;
         }
     })
-    return unique
+    return uniqueItems;
 }
 
-
-// 3. Use indexOf() to return the first index that has the value
 // Time complexity: best case O(nlog(n)) because the indexOf() stops as soon as an element is found
-const removeDupThree = (arr) => {
-    return arr.filter((item, index) => arr.indexOf(item) === index)
+const removeDuplicateUsingIndexOfOriginalArray = (duplicatedItems) => {
+    return duplicatedItems.filter((item, index) => {
+        duplicatedItems.indexOf(item) === index
+    });
 }
 
-
-// 4. Use indexOf on final array
 // worst case O(n^2) if there's little to no duplicate
-const removeDupFour = (arr) => {
-    const unique = []
-    arr.forEach(item => {
-        if (unique.indexOf(item) === -1) {
-            unique.push(item)
+const removeDuplicateUsingIndexOfFinalArray = (duplicatedItems) => {
+    const uniqueItems = [];
+    duplicatedItems.forEach(item => {
+        if (uniqueItems.indexOf(item) === -1) {
+            uniqueItems.push(item);
         }
     })
-    return unique
+    return uniqueItems;
 }
 
-// console.log("Using Set: ", removeDupOne(arr));
-// console.log("Using extra map: ", removeDupTwo(arr));
-// console.log("Using indexOf on Original array: ", removeDupThree(arr));
-// console.log("Use indexOf on Final Array: ", removeDupFour(arr));
+console.log("Using Set: ", removeDuplicateFactory(duplicatedItems, "set"));
+console.log("Using extra map: ", removeDuplicateFactory(duplicatedItems, "map"));
+console.log("Using indexOf on Original array: ", removeDuplicateFactory(duplicatedItems, "indexof-original"));
+console.log("Use indexOf on Final Array: ", removeDuplicateFactory(duplicatedItems, "indexof-final"));
 
 
 // ---------------------------------------------------------------
 // Exercise 2: Find Repetitions
-const arr_2 = [1, 4, 5, 7, 3, 1, 7, 5, 8, 3, 3, 9, 2, 3, 4, 4, 3, 2, 4, 4, 6, 7, 5, 6]
+const repeatedItems = [1, 4, 5, 7, 3, 1, 7, 5, 8, 3, 3, 9, 2, 3, 4, 4, 3, 2, 4, 4, 6, 7, 5, 6];
 
-// Using 2 loops and extra variables
-const findMaxRepetitionsOne = (arr) => {
-    if (arr.length === 0) {
-        return null
+const findMaxRepetitionsFactory = (repeatedItems, option) => {
+    if (!Array.isArray(repeatedItems)) {
+        throw (new Error('Expect an array but received another type.'));
     }
 
-    const counters = {}
-    arr.forEach(item => {
-        // add 1 if item already in counters obj, else set it to 1
-        counters[item] = counters[item] ? counters[item] += 1 : 1
-    })
+    if (repeatedItems.length === 0) {
+        throw (new Error('Expect an array with at least one item but received an empty array.'));
+    }
 
-    let maxRepititions = 0                         // current max repititions
-    const mostRepeated = []                // array contains items with max repetitions
+    if (!option) {
+        throw (new Error('Expect an option as a string with value "loops" or "reduce"'));
+    }
 
-    for (const [key, value] of Object.entries(counters)) {
-        // if value is higher than current max
-        if (value > maxRepititions) {
-            maxRepititions = value
-            mostRepeated.length = 0        // clear original array
-            mostRepeated.push(key)         // add the key to the array
+    switch(option.toLowerCase()) {
+        case 'loops': {
+            return findMaxRepetitionsWithTwoLoops(repeatedItems);
         }
-        else if (value === maxRepititions) {       // multiple key with max repetitions
-            mostRepeated.push(key)
+        case 'reduce': {
+            return findMaxRepetitionsWithReduce(repeatedItems);
+        }
+        default: {
+            throw (new Error('Expect an option as a string with value "loops" or "reduce"'));
         }
     }
-    return { mostRepeated: mostRepeated, repetitions: maxRepititions }
 }
 
-// console.log(findMaxRepetitionsOne(arr_2));
+const findMaxRepetitionsWithTwoLoops = (repeatedItems) => {
+    const itemRepetitionsCounters = {};
+    repeatedItems.forEach(item => {
+        itemRepetitionsCounters[item] = itemRepetitionsCounters[item] ? itemRepetitionsCounters[item] += 1 : 1;
+    })
 
+    let maxRepititions = 0
+    const mostRepeatedItems = []
 
-// Using only one loop: array.reduce()
-const findMaxRepetitionsTwo = (arr) => {
-    if (arr.length === 0) {
-        return null
+    for (const [currentItem, currentItemRepititions] of Object.entries(itemRepetitionsCounters)) {
+        if (currentItemRepititions > maxRepititions) {
+            maxRepititions = currentItemRepititions;
+            mostRepeatedItems.length = 0;
+            mostRepeatedItems.push(parseInt(currentItem));
+        }
+        else if (currentItemRepititions === maxRepititions) {
+            mostRepeatedItems.push(parseInt(currentItem));
+        }
     }
-    const { mostRepeated, counters } = arr.reduce((accumulated, item) => {
+    return { 
+        mostRepeatedItems: mostRepeatedItems, 
+        maxRepititions: maxRepititions 
+    };
+}
+
+const findMaxRepetitionsWithReduce = (repeatedItems) => {
+    const { mostRepeatedItems, itemRepetitionCounters } = repeatedItems.reduce((accumulated, item) => {
+        const mostRepeatedItems = accumulated.mostRepeatedItems;
+        const itemRepetitionCounters = accumulated.itemRepetitionCounters;
 
         // count occurences for each item, not immediately update the counters obj as the 
         // count of most repeated values will also be changed, making if condition misbehave
-        const count = accumulated.counters[item] + 1 || 1
+        const currentItemRepetitions = itemRepetitionCounters[item] + 1 || 1;
+        const currentMaxRepeatedItems = mostRepeatedItems;
 
-        // current most repeated items
-        const maxVals = accumulated.mostRepeated
-
-        // if NO most repeated item exist (first loop) or their repetitions < those of current item
-        // => there's a new most repeated item, clear the current mostRepeated
-        if (maxVals.length === 0 || accumulated.counters[maxVals[0]] < accumulated.counters[item] + 1) {
-            accumulated.mostRepeated.length = 0          // remove all stored most repeated values
-            accumulated.mostRepeated.push(item);         // add the new max item to obj
+        if (currentMaxRepeatedItems.length === 0 || itemRepetitionCounters[currentMaxRepeatedItems[0]] < currentItemRepetitions) {
+            mostRepeatedItems.length = 0;
+            mostRepeatedItems.push(item);
         }
 
-        // if some most repeated item exist and their repetitions === those of current item,
-        // => add that item to mostRepeated obj
-        else if (maxVals.length && accumulated.counters[maxVals[0]] === accumulated.counters[item] + 1) {
-            accumulated.mostRepeated.push(item)
+        else if (currentMaxRepeatedItems.length && itemRepetitionCounters[currentMaxRepeatedItems[0]] === currentItemRepetitions) {
+            mostRepeatedItems.push(item);
         }
 
-        // update repetitions for the current item
-        accumulated.counters[item] = count
+        itemRepetitionCounters[item] = currentItemRepetitions;
 
-        return accumulated
-    }, { mostRepeated: [], counters: {} })
+        return accumulated;
+    }, { mostRepeatedItems: [], itemRepetitionCounters: {} });
 
-    return { mostRepeated: mostRepeated, repititions: counters[mostRepeated[0]] }
+    return { 
+        mostRepeatedItems: mostRepeatedItems, 
+        maxRepititions: itemRepetitionCounters[mostRepeatedItems[0]] 
+    };
 }
 
-console.log(findMaxRepetitionsTwo(arr_2));
+console.log(findMaxRepetitionsFactory(repeatedItems, "loops"));
+console.log(findMaxRepetitionsFactory(repeatedItems, "reduce"));
