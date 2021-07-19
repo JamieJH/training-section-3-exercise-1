@@ -34,6 +34,39 @@ const removeDuplicateFactory = (duplicatedItems, option) => {
     }
 }
 
+removeDuplicateFactoryConfiguration = (duplicatedItems, option) => {
+    if(!Array.isArray(duplicatedItems)) {
+        throw (new Error("Expect an array but received another type."));
+    }
+
+    if(duplicatedItems.length === 0) {
+        throw (new Error("Expect an array with at least one item but received an empty array."))
+    }
+
+    if (!option) {
+        throw (new Error('Expect an option as a string of value "set", "map", "indexof-original", or "indexof-final"'));
+    }
+
+    const configurations = {
+        'set': function() {
+            return removeDuplicateUsingSet(duplicatedItems);
+        },
+        'map': function() {
+            return removeDuplicateUsingMap(duplicatedItems);
+        },
+        'indexof-original': function() {
+            return removeDuplicateUsingIndexOfOriginalArray(duplicatedItems);
+        },
+        'indexof-final': function() {
+            return removeDuplicateUsingIndexOfFinalArray(duplicatedItems)
+        },
+        'default': function() {
+            throw (new Error('Expect an option as a string of value "set", "map", "indexof-original", or "indexof-final"'));
+        }
+    }
+    return (configurations[option] || configurations['default'])()
+}
+
 const removeDuplicateUsingSet = (duplicatedItems) => {
     return Array.from(new Set(duplicatedItems));
 }
@@ -53,7 +86,7 @@ const removeDuplicateUsingMap = (duplicatedItems) => {
 // Time complexity: best case O(nlog(n)) because the indexOf() stops as soon as an element is found
 const removeDuplicateUsingIndexOfOriginalArray = (duplicatedItems) => {
     return duplicatedItems.filter((item, index) => {
-        duplicatedItems.indexOf(item) === index
+        return duplicatedItems.indexOf(item) === index
     });
 }
 
@@ -72,6 +105,13 @@ console.log("Using Set: ", removeDuplicateFactory(duplicatedItems, "set"));
 console.log("Using extra map: ", removeDuplicateFactory(duplicatedItems, "map"));
 console.log("Using indexOf on Original array: ", removeDuplicateFactory(duplicatedItems, "indexof-original"));
 console.log("Use indexOf on Final Array: ", removeDuplicateFactory(duplicatedItems, "indexof-final"));
+
+console.log("Using Configuration - Set: ", removeDuplicateFactoryConfiguration(duplicatedItems, "set"));
+console.log("Using Configuration - Map: ", removeDuplicateFactoryConfiguration(duplicatedItems, "map"));
+console.log("Using Configuration - indexOf on Original array: ", removeDuplicateFactoryConfiguration(duplicatedItems, "indexof-original"));
+console.log("Using Configuration - indexOf on Final Array: ", removeDuplicateFactoryConfiguration(duplicatedItems, "indexof-final"));
+console.log("Using Configuration - other options: ", removeDuplicateFactoryConfiguration(duplicatedItems, "something else"));
+
 
 
 // ---------------------------------------------------------------
@@ -103,6 +143,35 @@ const findMaxRepetitionsFactory = (repeatedItems, option) => {
         }
     }
 }
+
+const findMaxRepetitionsFactoryConfiguration = (repeatedItems, option) => {
+    if (!Array.isArray(repeatedItems)) {
+        throw (new Error('Expect an array but received another type.'));
+    }
+
+    if (repeatedItems.length === 0) {
+        throw (new Error('Expect an array with at least one item but received an empty array.'));
+    }
+
+    if (!option) {
+        throw (new Error('Expect an option as a string with value "loops" or "reduce"'));
+    }
+
+    const configurations = {
+        'loops': function() {
+            return findMaxRepetitionsWithTwoLoops(repeatedItems);
+        },
+        'reduce': function() {
+            return findMaxRepetitionsWithReduce(repeatedItems);
+        },
+        'default': function() {
+            throw (new Error('Expect an option as a string with value "loops" or "reduce"'));
+        }
+    }
+
+    return (configurations[option] || configurations['default'])()
+}
+
 
 const findMaxRepetitionsWithTwoLoops = (repeatedItems) => {
     const itemRepetitionsCounters = {};

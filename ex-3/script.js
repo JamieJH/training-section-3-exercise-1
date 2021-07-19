@@ -151,30 +151,33 @@ import getDecisionTree from './tree.js';
         allDecisionsAnswers.innerHTML = "";
         allDecisionsAnswers.disabled = true;
 
-        switch (currentAction) {
-            case "add-decision":
+        const configurations = {
+            "add-decision": function () {
                 toggleActive(addDecisionContainer);
                 allDecisionsContainer.classList.add("add-decision");
-                break
-            case "add-answers":
+            },
+            "add-answers": function () {
                 toggleActive(addAnswersContainer);
-                break
-            case "edit-question":
+            },
+            "edit-question": function () {
                 toggleActive(editQuestionContainer);
-                break
-            case "edit-answers":
+            },
+            "edit-answers": function () {
                 allDecisionsAnswers.disabled = false;
                 allDecisionsContainer.classList.add("enabled");
                 toggleActive(editAnswersContainer)
-                break
-            case "remove-answers":
+            },
+            "remove-answers": function () {
                 allDecisionsAnswers.disabled = false;
                 allDecisionsContainer.classList.add("enabled");
                 toggleActive();
-                break
-            default:
+            },
+            "default": function () {
                 toggleActive();
-        }
+            }
+        };
+
+        (configurations[currentAction] || configurations['default'])()
     })
 
 
@@ -203,8 +206,8 @@ import getDecisionTree from './tree.js';
         }
 
         let question, answers;
-        switch (currentAction) {
-            case "add-decision":
+        const configurations = {
+            "add-decision": function () {
                 const newDecisionId = addDecisionId.value.trim().toLowerCase();
                 question = addDecisionQuestion.value.trim().toLowerCase();
                 answers = getEnteredAnswersAsArray(addDecisionAnswers);
@@ -212,34 +215,37 @@ import getDecisionTree from './tree.js';
                 addDecisionQuestion.value = "";
                 addDecisionAnswers.value = "";
                 addDecisionId.value = "";
-                break
-            case "add-answers":
+            },
+            "add-answers": function () {
                 answers = getEnteredAnswersAsArray(addAnswersAnswers);
                 answers ? decisionTree.addAnswersToDecision(chosenDecisionId, answers) : errorEmptyInputAlert("Add answers");
                 addAnswersAnswers.value = "";
-                break
-            case "edit-question":
+            },
+            "edit-question": function () {
                 const newQuestion = editQuestionContainer.querySelector("#edit-question-new").value.trim().toLowerCase();
                 newQuestion ? decisionTree.editDecisionQuestion(chosenDecisionId, newQuestion) : errorEmptyInputAlert("Edit Decision question");
                 editQuestionNew.value = "";
-                break
-            case "edit-answers":
+            },
+            "edit-answers": function () {
                 const toBeEditedAnswers = getSelectedOptionsAsArray(allDecisionsAnswers);
                 const newAnswers = getEnteredAnswersAsArray(editAnswersText);
                 (toBeEditedAnswers.length !== 0 && newAnswers) ?
                     decisionTree.editDecisionAnswers(chosenDecisionId, toBeEditedAnswers, newAnswers) :
                     errorEmptyInputAlert("Edit Decision Answers");
                 editAnswersText.value = "";
-                break
-            case "remove-decision":
+            },
+            "remove-decision": function () {
                 decisionTree.removeDecisionAndChildren(chosenDecisionId);
-                break
-            case "remove-answers":
+            },
+            "remove-answers": function () {
                 answers = getSelectedOptionsAsArray(allDecisionsAnswers);
                 answers ? decisionTree.removeMultipleAnswersFromDecision(chosenDecisionId, answers) : errorEmptyInputAlert("Remove Decision Answer(s)");
                 allDecisionsAnswers.innerHTML = "";
-                break
-        }
+            }
+        };
+
+        (configurations[currentAction] || configurations['default'])()
+
         console.log(decisionTree);
         setupChoices(decisionTree.initialDecision);
         populateAllDecisionOptions();
